@@ -29,7 +29,7 @@ Bu script, Linux sistemlerde yerel bilgi toplama ve potansiyel yetki yükseltme 
 ### İndirme
 
 ```bash
-git clone https://github.com/kullanici-adi/yetki-yukseltme-script.git
+git clone https://github.com/vedattascier/yetki_yukseltme.git
 cd yetki-yukseltme-script
 chmod +x yetki_yukseltme.sh
 ```
