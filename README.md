@@ -55,7 +55,7 @@ Bu betik, Linux sistemlerde kapsamlı yerel güvenlik değerlendirmesi ve yetki 
 
 ## Örnek Komutlar
 
-`ash
+`bash
 # Normal tarama
 ./linux-yetki-yukseltme.sh
 
