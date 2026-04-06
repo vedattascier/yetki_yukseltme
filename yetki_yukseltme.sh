@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Yerel Linux Bilgi Toplama & Yetki Yükseltme Betiği
 # Tam Türkçe versiyon
 # @vedattascier
