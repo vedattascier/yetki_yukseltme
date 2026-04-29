@@ -1,110 +1,193 @@
-Linux Yetki Yükseltme Denetim Aracı
+# 🛡️ Linux Yetki Yükseltme Denetim Aracı
 
-Bu betik, Linux sistemlerde kapsamlı yerel güvenlik değerlendirmesi ve yetki yükseltme analizleri yapmak için tasarlanmıştır. Script; sistem bilgileri, dosya izinleri, ağ güvenliği, servis yapılandırmaları, CVE kontrolü ve ML tabanlı anomali analizini aynı anda yürütür.
+Linux sistemlerde kapsamlı **yerel güvenlik denetimi** ve **yetki yükseltme (privilege escalation)** analizleri yapmak için geliştirilmiş gelişmiş bir otomasyon scriptidir.
 
-Önemli Not
-Rapor dosyaları script dosyasının bulunduğu dizinde oluşturulur.
-İki ayrı dosya üretilir:
-sonuclar.txt veya sonuclar_N.txt — ana terminal çıktısı ve tarama sonuçları
-yetkiyukseltme_report_TIMESTAMP.txt — detaylı rapor
-Raporlar aynı dizinde, farklı isimlerle kaydedilir.
-Temel Özellikler
-Tam Türkçe arayüz ve açıklamalar
-Risk puanlaması (0–100)
-ML ve CVE tabanlı analizler
-Detaylı sistem ve kullanıcı denetimleri
-Dosya sistemi, ağ, servis ve zamanlayıcı incelemeleri
-SUID/SGID, yazılabilir dosya ve PATH güvenliği kontrolleri
-SSH, sudo, PAM, sysctl, firewall, auditd analizleri
-Otomatik düzeltme önerileri ve güvenlik tavsiyeleri
-HTML, JSON, Markdown ve SQLite destekli raporlama
-En Yeni Eklenen Özellikler
-Makine öğrenmesi tabanlı risk tahmini
-CVE açıklık taraması
-Anomali tespiti (LD_PRELOAD, zombi işlemler, yazılabilir sistem binary’leri)
-Akıllı onarım ve sistem güvenlik değerlendirmesi
-Tarama sonrası raporun otomatik olarak ekrana yazdırılması
-Raporların script dizininde saklanması
-Kullanım
+Bu araç; sistem yapılandırmaları, dosya izinleri, servis güvenliği ve bilinen zafiyetleri analiz ederek riskleri tespit eder ve çözüm önerileri sunar.
+
+---
+
+## 📌 Genel Özellikler
+
+- Tam Türkçe arayüz
+- Risk puanlama sistemi (**0–100**)
+- CVE (bilinen zafiyet) taraması
+- Makine öğrenmesi tabanlı anomali analizi
+- Otomatik güvenlik önerileri
+- Çoklu çıktı formatı desteği:
+  - TXT
+  - JSON
+  - Markdown
+  - HTML
+  - SQLite veritabanı
+
+---
+
+## 🚀 Yeni Eklenen Özellikler
+
+- 🤖 ML tabanlı risk tahmini
+- 🔍 CVE açıklık taraması
+- ⚠️ Anomali tespiti:
+  - LD_PRELOAD manipülasyonu
+  - Zombi işlemler
+  - Yazılabilir sistem binary’leri
+- 🛠️ Otomatik düzeltme scripti oluşturma
+- 📊 Tarama sonrası raporun otomatik gösterimi
+
+---
+
+## 📂 Oluşturulan Dosyalar
+
+Script çalıştırıldığında aynı dizinde aşağıdaki dosyalar oluşturulur:
+
+| Dosya | Açıklama |
+|------|--------|
+| `sonuclar.txt` / `sonuclar_N.txt` | Terminal çıktısı |
+| `yetkiyukseltme_report_TIMESTAMP.txt` | Detaylı analiz raporu |
+| `security_scans.db` | SQLite veritabanı (opsiyonel) |
+
+---
+
+## ⚙️ Kurulum & Kullanım
+
+Script’e çalıştırma izni verin:
+
+```bash
+chmod +x linux-yetki-yukseltme.sh
+```
+
+Çalıştırın:
+
+```bash
 ./linux-yetki-yukseltme.sh
-Seçenekler
--h, --help : Yardım mesajını gösterir
--v : Ayrıntılı çıktı modu
--q : Sessiz mod (yalnızca özet)
--j : JSON çıktısı
--m : Markdown çıktısı
--f : Hızlı tarama
--t : Kapsamlı tarama
--k <anahtar> : Anahtar kelime araması
--e <dizin> : Dışa aktarım dizini
--p : Sudo parolası ister
--r <dosya> : Özel rapor adı
---no-colors : Renkli çıktıyı kapatır
---fix-script : Otomatik düzeltme script’i oluşturur
---html-report : HTML raporu oluşturur
---database : SQLite veritabanı kaydı
---version : Versiyon bilgisi
-Örnek Kullanımlar
-# Normal tarama
-./linux-yetki-yukseltme.sh
+```
 
-# Hızlı tarama ve özet
+---
+
+## 🧩 Komut Satırı Seçenekleri
+
+| Parametre | Açıklama |
+|----------|--------|
+| `-h, --help` | Yardım menüsü |
+| `-v` | Ayrıntılı çıktı |
+| `-q` | Sessiz mod (sadece özet) |
+| `-f` | Hızlı tarama |
+| `-t` | Kapsamlı tarama |
+| `-j` | JSON çıktısı |
+| `-m` | Markdown çıktısı |
+| `-p` | Sudo parolası ister |
+| `-k <anahtar>` | Anahtar kelime arama |
+| `-e <dizin>` | Dışa aktarım dizini |
+| `-r <dosya>` | Özel rapor adı |
+| `--html-report` | HTML rapor oluşturur |
+| `--database` | SQLite kaydı |
+| `--fix-script` | Otomatik düzeltme scripti üretir |
+| `--no-colors` | Renkleri kapatır |
+| `--version` | Versiyon bilgisi |
+
+---
+
+## 💡 Örnek Kullanımlar
+
+### Standart tarama
+```bash
+./linux-yetki-yukseltme.sh
+```
+
+### Hızlı tarama (özet çıktı)
+```bash
 ./linux-yetki-yukseltme.sh -f -q
+```
 
-# JSON çıktısı ile detaylı tarama
+### Detaylı + JSON çıktısı
+```bash
 ./linux-yetki-yukseltme.sh -t -j
+```
 
-# HTML rapor oluşturma
+### HTML rapor
+```bash
 ./linux-yetki-yukseltme.sh --html-report
+```
 
-# SQLite kayıt
+### Veritabanına kayıt
+```bash
 ./linux-yetki-yukseltme.sh --database
+```
 
-# Özel rapor dosyası
-./linux-yetki-yukseltme.sh -r ./ozel_rapor.txt
-Raporlar
+---
 
-Script çalıştırıldığında en son rapor dosyası otomatik olarak ekrana yazdırılır. Bu sayede kullanıcı hem terminal çıktısını hem de rapor içeriğini aynı anda görüntüleyebilir.
+## 🔍 Tarama Kapsamı
 
-Oluşturulan Dosyalar
-sonuclar.txt veya sonuclar_N.txt
-yetkiyukseltme_report_TIMESTAMP.txt
-security_scans.db (SQLite destekliyse)
-Tarama Kapsamı
-Sistem Bilgileri
-Çekirdek versiyonu
-Dağıtım bilgileri
-Bellek ve disk kullanımı
-İşlemci ve ağ bilgileri
-Kullanıcı / Grup Denetimi
-Kullanıcı hesapları
-Sudo yapılandırması
-Parola politikaları
-Shadow dosya izinleri
-Dosya Sistemi Güvenliği
-SUID/SGID dosyaları
-Dünya tarafından yazılabilir dosyalar
-Yazılabilir sistem binary’leri
-Kütüphane enjeksiyonu riskleri
-Ağ ve Servis Analizi
-SSH, iptables, UFW
-Açık portlar
-Cron / systemd timer
-Servis ve daemon güvenliği
-Ek Güvenlik Analizleri
-CVE tabanlı sürüm kontrolü
-ML tabanlı anomali analizi
-Tedarik zinciri riski
-Sıfır gün (zero-day) heuristikleri
-Auditd hazır durumu
-Şifreleme ve TLS kontrolleri
-Risk Değerlendirme
-Seviyeler
-KRİTİK: Acil müdahale gerekli
-ÇOK YÜKSEK: Hızlı düzeltme gerekli
-YÜKSEK: Kısa sürede iyileştirilmeli
-ORTA: Düzenli bakım gerekli
-DÜŞÜK: İzlenebilir
-Yasal Uyarı
+### 🖥️ Sistem Bilgileri
+- Kernel versiyonu
+- Dağıtım bilgisi
+- CPU / RAM / Disk kullanımı
+- Ağ yapılandırması
 
-Bu araç yalnızca kendi sisteminizde veya yazılı izin verilen test ortamlarında kullanılmalıdır. Yetkisiz erişim ve testler yasal sorumluluk doğurur.
+### 👤 Kullanıcı & Yetki Denetimi
+- Kullanıcı hesapları
+- Sudo yetkileri
+- Parola politikaları
+- `/etc/shadow` güvenliği
+
+### 📁 Dosya Sistemi Güvenliği
+- SUID / SGID dosyalar
+- Dünya yazılabilir dosyalar
+- Sistem binary güvenliği
+- Kütüphane enjeksiyon riskleri
+
+### 🌐 Ağ & Servis Analizi
+- SSH yapılandırması
+- Firewall (iptables / UFW)
+- Açık portlar
+- Cron & systemd timer
+- Servis güvenliği
+
+### 🔐 Gelişmiş Güvenlik Analizleri
+- CVE kontrolü
+- ML tabanlı anomali tespiti
+- Tedarik zinciri riskleri
+- Zero-day heuristikleri
+- Auditd durumu
+- TLS / şifreleme kontrolleri
+
+---
+
+## 📊 Risk Değerlendirme Seviyeleri
+
+| Seviye | Açıklama |
+|------|--------|
+| 🔴 KRİTİK | Acil müdahale gerekli |
+| 🟠 ÇOK YÜKSEK | Hızlı aksiyon alınmalı |
+| 🟡 YÜKSEK | Kısa sürede düzeltilmeli |
+| 🔵 ORTA | Düzenli bakım gerekli |
+| ⚪ DÜŞÜK | İzlenebilir |
+
+---
+
+## 📢 Raporlama
+
+Tarama tamamlandıktan sonra:
+
+- En güncel rapor **otomatik olarak terminale yazdırılır**
+- Aynı zamanda dosya olarak kaydedilir
+- Farklı formatlarda dışa aktarım mümkündür
+
+---
+
+## ⚠️ Yasal Uyarı
+
+Bu araç yalnızca:
+
+- Kendi sistemlerinizde  
+- Açık izin verilen test ortamlarında  
+
+kullanılmalıdır.
+
+Yetkisiz sistemlerde yapılan testler **yasal sorumluluk doğurur**.
+
+---
+
+## 🧠 Not
+
+Bu araç bir **otomasyon destekli analiz** sağlar.  
+Tespit edilen bulgular mutlaka **manuel doğrulama** ile teyit edilmelidir.
